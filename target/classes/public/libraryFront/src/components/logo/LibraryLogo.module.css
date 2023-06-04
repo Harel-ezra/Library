@@ -1,0 +1,13 @@
+.libraryLogo{
+    font-size: 10em !important;
+    color: rgb(136, 170, 185);
+    -webkit-text-stroke: calc(0.08vh + 0.08vw) #438ba2;
+    text-shadow:
+            0vw 0.3vh 0.3vh #000000,
+            0.3vw 0.3vh 0.3vh #000000;
+    white-space: nowrap;
+}
+.libraryLogo:hover
+{
+    transform:scale( 1.1);
+}

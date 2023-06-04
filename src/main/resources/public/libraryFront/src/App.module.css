@@ -1,0 +1,16 @@
+html {
+  direction: rtl;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  /* overflow: hidden; */
+  /* background-color: rgb(62, 115, 131); */
+}
+
+/* :root {
+  /* color: brown; */
+

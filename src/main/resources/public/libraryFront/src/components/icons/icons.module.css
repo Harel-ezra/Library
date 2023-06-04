@@ -1,0 +1,8 @@
+.iconsFlex
+{
+    display: flex;
+    flex-direction: column;
+}
+.textCenter{
+    text-align: center;
+}

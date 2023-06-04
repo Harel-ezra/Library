@@ -1,0 +1,17 @@
+.topBarBox{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 10em;
+    border:solid rgb(151, 160, 169);
+    border-radius: 2em;
+    box-sizing: border-box;
+    padding: 1em;
+}
+.flex{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 30%;
+}

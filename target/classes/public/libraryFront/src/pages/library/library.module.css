@@ -1,0 +1,26 @@
+.libraryPageBox
+{
+    display: flex;
+    /* flex-direction: column; */
+    /* justify-content: space-evenly; */
+    /* height: 100%; */
+    background-color: blueviolet;
+    height: 100%;
+
+}
+
+.topBarAndContantBox
+{
+    display: flex;
+    flex-direction: column;
+    background-color: brown;
+    /* justify-content: space-evenly; */
+    /* height:40em; */
+}
+
+.libraryContentBox{
+    display: flex;
+    justify-content: space-evenly;
+    background-color: rgb(73, 127, 177);
+    /* height:40em; */
+}
