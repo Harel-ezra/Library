@@ -1,11 +1,8 @@
 .sideBarBox{
-    width: 15em;
+    width: 17rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* height: 100%; */
-    /* border:0.01em solid  black; */
-    /* border-radius: 1em; */
-    /* padding-top: 1em; */
-    
+    box-shadow: -0.1rem 9rem 0.5rem rgb(42, 37, 37);
+    z-index: 1;
 }

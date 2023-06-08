@@ -15,7 +15,7 @@ export const DeleteButton = ({ onClick }: ButtonFunction) => (
       <IconButton onClick={ onClick }>
         <DeleteIcon />
       </IconButton>
-      <Typography className={ iconsStyle.textCenter }>מחק</Typography>
+      <Typography className={ iconsStyle.textCenter }></Typography>
     </Box>
 );
 
@@ -25,7 +25,7 @@ export const EditButton = ({ onClick }: ButtonFunction) => (
       <IconButton onClick={ onClick }>
         <EditIcon />
       </IconButton>
-      <Typography className={ iconsStyle.textCenter }>ערוך</Typography>
+      <Typography className={ iconsStyle.textCenter }></Typography>
     </Box>
 );
 

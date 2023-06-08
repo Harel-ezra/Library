@@ -1,8 +1,21 @@
-.itemsBox{
-    width: 40%;
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    border:solid rgb(0, 0, 0);
-    border-radius: 1em;
+.itemsBox {
+  width: 45rem;
+  display: flex;
+  /* justify-content: center; */
+  align-items: start;
+  height: 45rem;
+  border: 0.2em solid rgb(0, 0, 0);
+  border-radius: 4rem;
+  background-color: rgb(255, 255, 255);
+  box-sizing: border-box;
+  padding: 2rem;
+  flex-direction: column;
+}
+.iconRow {
+  display: flex;
+  flex-direction: row;
+}
+.row{
+  height: 1rem !important;
+  cursor: pointer;
 }

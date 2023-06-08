@@ -22,9 +22,9 @@ public class BL {
         return DAL.addBookToLibrary(bookId, bookName, authorId);
     }
 
-    public static String removeBookFromLibrary(String bookId, String authorId) {
-        return DAL.removeBookFromLibrary(bookId, authorId);
-    }
+//    public static String removeBookFromLibrary(String bookId) {
+//        return DAL.removeBookFromLibrary(bookId);
+//    }
 
     public static String renameBook(String bookId, String newName) {
         return DAL.renameBook(bookId, newName);
@@ -70,11 +70,27 @@ public class BL {
 
     }
 
-    public static String addWrittenBook(String authorId, String bookId) {
-        return DAL.addWrittenBook(authorId, bookId);
+    public static String addWrittenBook(String authorId, String bookName) {
+        String bookId=UUID.randomUUID().toString();
+        return DAL.addWrittenBook(authorId,bookId, bookName);
     }
 
     public static String removeWrittenBook(String authorId, String bookId) {
         return DAL.removeWrittenBook(authorId, bookId);
+    }
+
+    public static ArrayList<Book> getAllReadiedBooks(String userId) {
+        return DAL.getAllReadiedBooks(userId);
+
+    }
+
+    public static ArrayList<Book> getAllWrittenBooks(String authorId) {
+        return DAL.getAllWrittenBooks( authorId);
+
+    }
+
+    public static ArrayList<User> getAllBookReaders(String bookId) {
+        return DAL.getAllBookReaders( bookId);
+
     }
 }

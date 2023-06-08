@@ -8,7 +8,7 @@ interface  Props{
   setAuthors:React.Dispatch<React.SetStateAction<Author[]>>,
 }
 
-type Set=React.Dispatch<React.SetStateAction<User[]>>;
+// type Set=React.Dispatch<React.SetStateAction<User[]>>;
 export const useGetAll = (set:Props) => {
   useEffect(() => {
     getAllUsersaAxios().then((res) => set.setUsers(res));

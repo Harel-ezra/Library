@@ -1,16 +1,14 @@
 html {
   direction: rtl;
-  height: 100%;
+  /* height: 80rem; */
 }
 
 body {
-  height: 100%;
-  padding: 0;
+  /* height: 100%; */
+  /* padding: 0; */
   margin: 0;
-  /* overflow: hidden; */
-  /* background-color: rgb(62, 115, 131); */
+  /* font-family: "David" !important; */
 }
-
-/* :root {
-  /* color: brown; */
-
+* {
+  font-family: Calibri !important;
+}

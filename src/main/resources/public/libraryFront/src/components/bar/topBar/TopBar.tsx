@@ -10,8 +10,11 @@ export const TopBar = () => {
   };
   return (
     <Box className={topBarStyle.topBarBox}>
-        <Typography>שלום הראל</Typography>
-        <LogButton text="התנתק" onClick={handleLogOut} />
+      <Box>
+        <Typography className={topBarStyle.text}>שלום הראל</Typography>
+        <Typography>הספר האוהב עליך: דלכגדעכלדחיגכ</Typography>
+      </Box>
+      <LogButton text="התנתק" onClick={handleLogOut} />
     </Box>
   );
 };

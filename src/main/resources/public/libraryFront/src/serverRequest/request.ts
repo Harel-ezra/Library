@@ -2,25 +2,23 @@ import axios from "axios";
 
 const httpLocalHost = `http://localhost:4567/`;
 
-export const addBookToLibraryAxios = async (
-  bookName: string,
-  authorId: string
-) => {
-  const response = await axios.post(`${httpLocalHost}addBookToLibrary`, {
-    bookName: bookName,
-    authorId: authorId,
-  });
-  return response?.status;
-};
+// export const addBookToLibraryAxios = async (
+//   bookName: string,
+//   authorId: string
+// ) => {
+//   const response = await axios.post(`${httpLocalHost}addBookToLibrary`, {
+//     bookName: bookName,
+//     authorId: authorId,
+//   });
+//   return response?.status;
+// };
 
 export const removeBookFromLibraryAxios = async (
   bookId: string,
-  authorId: string
 ) => {
-  const response = await axios.delete(`${httpLocalHost}addBookToLibrary`, {
+  const response = await axios.delete(`${httpLocalHost}removeBookFromLibrary`, {
     data: {
       bookId: bookId,
-      authorId: authorId,
     },
   });
   return response?.status;
@@ -58,7 +56,10 @@ export const renameUserAxios = async (userId: string, newName: string) => {
   return response?.status;
 };
 
-export const updateFavoriteBookAxios = async (userId: string, bookId: string) => {
+export const updateFavoriteBookAxios = async (
+  userId: string,
+  bookId: string
+) => {
   const response = await axios.put(`${httpLocalHost}updateFavoriteBook`, {
     userId: userId,
     bookId: bookId,
@@ -74,7 +75,10 @@ export const addReadiedBookAxios = async (userId: string, bookId: string) => {
   return response?.status;
 };
 
-export const removeReadiedBookAxios = async (userId: string, bookId: string) => {
+export const removeReadiedBookAxios = async (
+  userId: string,
+  bookId: string
+) => {
   const response = await axios.put(`${httpLocalHost}removeReadiedBook`, {
     userId: userId,
     bookId: bookId,
@@ -82,10 +86,9 @@ export const removeReadiedBookAxios = async (userId: string, bookId: string) => 
   return response?.status;
 };
 
-
-export const addAuthorAxios = async (authorId: string) => {
+export const addAuthorAxios = async (name: string) => {
   const response = await axios.post(`${httpLocalHost}addAuthor`, {
-    authorId: authorId,
+    authorName: name,
   });
   return response?.status;
 };
@@ -107,14 +110,17 @@ export const renameAuthorAxios = async (authorId: string, newName: string) => {
   return response?.status;
 };
 
-export const addWrittenBookAxios = async (authorId: string, bookId: string) => {
+export const addWrittenBookAxios = async (authorId: string, bookName: string) => {
   const response = await axios.put(`${httpLocalHost}addWrittenBook`, {
     authorId: authorId,
-    nebookIdwName: bookId,
+    bookName: bookName,
   });
   return response?.status;
 };
-export const removeWrittenBookAxios = async (authorId: string, bookId: string) => {
+export const removeWrittenBookAxios = async (
+  authorId: string,
+  bookId: string
+) => {
   const response = await axios.put(`${httpLocalHost}removeWrittenBook`, {
     authorId: authorId,
     bookId: bookId,
@@ -136,3 +142,23 @@ export const getAllBooksAxios = async () => {
   const response = await axios.get(`${httpLocalHost}allBooks`);
   return await response.data;
 };
+
+export const getAllWrittenBooksAxios = async (authorId: string) => {
+  const response = await axios.get(
+    `${httpLocalHost}getAllWrittenBooks?id=${authorId}`
+  );
+  return await response.data;
+};
+export const getAllReadiedBooksAxios = async (userId: string) => {
+  const response = await axios.get(
+    `${httpLocalHost}getAllReadiedBooks?id=${userId}`
+  );
+  return await response.data;
+};
+export const getAllBookReadersAxios = async (bookId: string) => {
+  const response = await axios.get(
+    `${httpLocalHost}getAllBookReaders?id=${bookId}`
+  );
+  return await response.data;
+};
+

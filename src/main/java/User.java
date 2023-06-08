@@ -1,15 +1,16 @@
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     private String id;
     private String name;
-    private String[] booksRead;
+    private List<String> booksRead;
     private String favoriteBookId;
 
     public User() {
     }
 
-    public User(String id, String name, String[] booksRead, String favoriteBookId) {
+    public User(String id, String name, List<String> booksRead, String favoriteBookId) {
         this.id = id;
         this.name = name;
         this.booksRead = booksRead;
@@ -19,7 +20,7 @@ public class User {
     public User(String id, String name) {
         this.id = id;
         this.name = name;
-        this.booksRead = new String[0];
+        this.booksRead = new ArrayList<>();
         this.favoriteBookId = null;
     }
 
@@ -31,7 +32,7 @@ public class User {
         return name;
     }
 
-    public String[] getBooksRead() {
+    public List<String> getBooksRead() {
         return booksRead;
     }
 
@@ -47,7 +48,7 @@ public class User {
         this.name = name;
     }
 
-    public void setBooksRead(String[] booksRead) {
+    public void setBooksRead(List<String> booksRead) {
         this.booksRead = booksRead;
     }
 

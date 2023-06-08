@@ -1,8 +1,13 @@
-.sideBarTab
-{
-    font-size: 2em;
-    background-color:  rgb(58, 143, 177) !important;
-    height: 5em;
-    width: 20em;
-    /* border: solid rgb(82, 14, 200) !important; */
+.sideBarTab {
+  /* font-size: 2rem !important; */
+  height: 4rem;
+  width: 17rem;
+  display: flex;
+  justify-content: start !important;
+  padding-right: 1rem !important;
+}
+
+.text {
+  font-size: 2rem !important;
+  margin-right: 1rem !important;
 }

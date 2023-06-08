@@ -15,7 +15,10 @@ export interface Book {
   authorId: string;
 }
 
-export type ItemsList = Book[] | User[] | Author[];
+export type Object=Book | User | Author;
+export type Objects = Object[];
+
+export type Bar = "books" | "users" | "authors" | "none";
 
 // export interface ItemsList {
 //   items: Book[] | User[] | Author[];

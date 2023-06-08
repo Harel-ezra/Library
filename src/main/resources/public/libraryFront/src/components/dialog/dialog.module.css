@@ -1,0 +1,44 @@
+.dialogButton
+{
+    width: 8rem;
+    border: 0.1rem solid rgb(52, 121, 181) !important;
+    border-radius:0.5rem !important;
+    margin-right: 2em;
+}
+
+.AddDialogText
+{
+  padding-left: 1rem !important;
+}
+.dialog{
+    height: 15rem;
+    width: 30rem;
+
+}
+.DialogTitle{
+    font-size: 2.5rem !important;
+    align-self: center !important;
+}
+.dilogContent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.text{
+    width: 20rem;
+}
+.dilogAction{
+    display: flex !important;
+    justify-content: space-around !important;
+}
+
+.AddBookDialogText
+{
+  padding-left: 1rem !important;
+}
+
+.AddBookDialog {
+  width: 8rem;
+  border: 0.1rem solid rgb(52, 121, 181) !important;
+  border-radius:0.5rem !important;
+}
