@@ -25,7 +25,7 @@ export const SideBarTab = (props: Props) => {
         className={sideBarTabStyle.text}
         sx={{ color: "primary.main" }}
       >
-        {props.text}{" "}
+        {props.text}
       </Typography>
     </Button>
   );

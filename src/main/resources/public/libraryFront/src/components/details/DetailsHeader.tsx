@@ -42,7 +42,7 @@ export const DetailsHeader = (props: Props) => {
 };
 
 const hedaerText = {
-  User: "הספרים שקרא",
-  Book: "הקוראים של הספר",
-  Author: "הספרים שכתב",
+   User: "הספרים שקרא",
+   Book: "הקוראים של הספר",
+   Author: "הספרים שכתב",
 };

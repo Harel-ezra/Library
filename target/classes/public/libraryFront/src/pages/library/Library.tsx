@@ -8,7 +8,7 @@ import { SideBar } from "components/bar/sideBar/SideBar";
 import { ItemsTable } from "src/components/items/ItemsTable";
 import { DetailsTable } from "src/components/details/DetailsTable";
 import { EntityType } from "src/globalTypes/EntityType";
-import { SimpleObject } from "src/globalTypes/SimpleObject";
+import { Entity } from "src/globalTypes/Entity";
 import {
   addEntity,
   addReadBook,
@@ -25,56 +25,29 @@ import { StoreState } from "src/store";
 const Library = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // היוזר איידי ישלף רק מהרידקס
-  // ואת הבדיקה של האם אנחנו מחוברים נעשה ב
-  // useEffect
-  // ושיהיה לזה פונקציה
-  // כל הלוגיקה של היוזר תכנס בפונקצית התחברות
-
-  // זה גם יהיה חלק מפונקציית ההתחברות במקרה שאנחנו מרעננים
-  // -----------------------------------------------------------
   const user = useSelector((store: StoreState) => store.user);
-  // const [user, setUser] = useState(userRedux);
   useEffect(() => {
     if (!user) {
       navigate("/");
       return;
     }
-    handleFavoriteBook(user!.id, dispatch);
+    handleFavoriteBook(user.id, dispatch);
   }, []);
 
-  // localStorage.setItem("id", userId);
-  // dispatch({ type: "SET_ID", payload: userId });
-  // עד לכאן ^ מה שאמרתי למעלה
-  // selectedEntityType
   const [selectedEntityType, setSelectedEntityType] = useState<EntityType>();
 
-  // Entities
-  const [entities, setEntities] = useState<SimpleObject[]>([]);
+  const [entities, setEntities] = useState<Entity[]>([]);
 
-  // selectedEntityDetails
-  const [selectedEntityDetails, setSelectedEntityDetails] = useState<
-    SimpleObject[]
-  >([]);
-  const [selectedEntity, setSelectedEntity] = useState<SimpleObject>();
+  const [selectedEntityDetails, setSelectedEntityDetails] = useState<Entity[]>(
+    []
+  );
+  const [selectedEntity, setSelectedEntity] = useState<Entity>();
 
-  // selectedEntity
-  // שיהיה undefined
-  // בלי האובייקט המוזר
-
-  // לא טוב אתה צריך לשמור את היוזר המלא ברידקס
-  // אם השתנה שם היוזר שלנו אז נשנה רק את השם ברידקס
-  // const [favoriteBookName, setFavoriteBookName] = useState("");
-  // ותעיף את זה
-  // const [userName, setUserName] = useState("");
-
-  // handleSidebarSelect
   const handleSidebarSelect = (entityType: EntityType) => {
     setEntities([]);
     setSelectedEntity(undefined);
     setSelectedEntityDetails([]);
 
-    // שים if
     if (entityType) getEntities(entityType).then((res) => setEntities(res));
     setSelectedEntityType(entityType);
   };
@@ -86,33 +59,20 @@ const Library = () => {
         setSelectedEntityDetails(res)
       );
     } else {
-      // תנאי מיותר זה גם מתקשר לזה ש
-      // Bar לא צריך להיות undefined
       await addEntity(name, entityType).then((res) => setEntities(res));
-      // getEntities(entityType).then((res) => setEntities(res));
     }
   };
-
-  // interface ServerResult {
-  //   isSuccess: boolean,
-  //   data: any
-  // }
 
   const HandleRemoveEntity = async (id: string, entityType: EntityType) => {
     if (id === selectedEntity?.id) {
       setSelectedEntityDetails([]);
       setSelectedEntity(undefined);
     }
-    // תנאי מיותר זה גם מתקשר לזה ש
-    // Bar לא צריך להיות undefined
-    // removeEntity(id, entityType).then((res) => setEntities(res));
     setEntities(await removeEntity(id, entityType));
 
     if (selectedEntityType === "Author") {
-      handleFavoriteBook(user!.id, dispatch);
+      handleFavoriteBook(user.id, dispatch);
     }
-    // תוסיף תנאים מתאימים
-    // handleFavoriteBook(user!.id, dispatch);
   };
 
   const handleRenameEntity = async (
@@ -120,19 +80,19 @@ const Library = () => {
     entityType: EntityType,
     newName: string
   ) => {
-    if (id === user!.id) {
+    if (id === user.id) {
       dispatch({ type: "SET_USER_NAME", payload: { name: newName } });
     }
+    // כאן עדיף שנקבל שם ומזהה של היישות שהשתנתה ואז למצוא אצלנו ולשנות
+    // לא תמיד עדיף שליפה
     setEntities(await renameEntity(id, newName, entityType));
 
-    if (id === user!.favoriteBookId) {
-      handleFavoriteBook(user!.id, dispatch);
+    if (id === user.favoriteBookId) {
+      handleFavoriteBook(user.id, dispatch);
     }
   };
 
-  // handleSelectEntity
-  const handleSelectEntityDetails = (entityType: EntityType, id: string) => {
-    // במקום סימן שאלה תשים סימן קריאה כי אתה יודע שזה בהכרח קיים
+  const handleSelectEntity = (entityType: EntityType, id: string) => {
     setSelectedEntity({
       id: id,
       name: entities.find((obj) => obj.id === id)!.name,
@@ -140,53 +100,46 @@ const Library = () => {
     getEntityDetails(id, entityType).then((res) =>
       setSelectedEntityDetails(res)
     );
-    // ^ למה handle ולא get
-    // ולמה המילה function
   };
 
-  // addReadBook
-  // readied זה לא מילה
+  // אפשר גם addBookToUser
   const handleAddReadBook = (userId: string, bookId: string) => {
     addReadBook(userId, bookId).then((res) => setSelectedEntityDetails(res));
   };
 
   const handleRemoveEntityDetail = async (
-    objectInfoId: string,
+    entityId: string,
     entityType: EntityType
   ) => {
     setSelectedEntityDetails(
-      await removeEntityBook(selectedEntity!.id, objectInfoId, entityType)
+      await removeEntityBook(selectedEntity!.id, entityId, entityType)
     );
-    if (objectInfoId === user!.favoriteBookId) {
-      handleFavoriteBook(user!.id, dispatch);
+    if (entityId === user.favoriteBookId) {
+      dispatch({
+        type: "SET_FAVORITE_BOOK",
+        payload: { id: "0", name: "לא נבחר ספר" },
+      });
     }
   };
 
   return (
-    <Box className={libraryPageStyle.libraryPageBox}>
+    <Box className={libraryPageStyle.libraryPage}>
       <SideBar onClick={handleSidebarSelect}></SideBar>
       <Box className={libraryPageStyle.topBarAndContantBox}>
-        {/* שלא יהיה בתוך התוכן עמוד */}
-        {/* 
-        אתה יכול לשים להם absolute 
-        זה מקרה ספציפי שאפשר 
-        */}
         <TopBar />
         <Box
           className={libraryPageStyle.libraryContentBox}
           bgcolor={"primary.main"}
         >
-          {/* ItemsTable */}
           <ItemsTable
             entitys={entities}
-            selectedEntityDetails={handleSelectEntityDetails}
+            selectedEntityDetails={handleSelectEntity}
             entityType={selectedEntityType}
             addEntity={handleAddEntity}
             removeEntity={HandleRemoveEntity}
             renameEntity={handleRenameEntity}
             selectedEntity={selectedEntity}
           ></ItemsTable>
-          {/* DetailsTable */}
           <DetailsTable
             selectedEntity={selectedEntity!}
             addEntityDetail={handleAddEntity}

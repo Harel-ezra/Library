@@ -1,7 +1,7 @@
 import { Box, Table, TableBody, TableContainer } from "@mui/material";
 import itemsStyle from "./items.module.css";
 import { EntityType } from "src/globalTypes/EntityType";
-import { SimpleObject } from "src/globalTypes/SimpleObject";
+import { Entity } from "src/globalTypes/Entity";
 import { AddObjectDialog } from "components/dialog/AddObjectDialog";
 
 import { TableHeader } from "./TableHeader";
@@ -9,7 +9,7 @@ import { Row } from "./Row";
 
 interface Props {
   entityType?: EntityType;
-  entitys: SimpleObject[];
+  entitys: Entity[];
   addEntity: (name: string, entityType: EntityType) => void;
   removeEntity: (id: string, entityType: EntityType) => void;
   renameEntity: (id: string, entityType: EntityType, newName: string) => void;
@@ -18,7 +18,7 @@ interface Props {
     id: string,
     name: string
   ) => void;
-  selectedEntity?: SimpleObject;
+  selectedEntity?: Entity;
 }
 export const ItemsTable = (props: Props) => {
   return (
@@ -43,7 +43,7 @@ export const ItemsTable = (props: Props) => {
             {/* תסדר את השורות */}
             <TableHeader />
             <TableBody>
-              {props.entitys.map((entity: SimpleObject, index: number) => (
+              {props.entitys.map((entity: Entity, index: number) => (
                   <Row
                     key={entity.id}
                     selectedEntity={props.selectedEntity?.id === entity.id}

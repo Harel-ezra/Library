@@ -15,11 +15,11 @@ import {
 import { EditButton, DeleteButton } from "components/icons/Icons";
 import dialogStyle from "components/dialog/dialog.module.css";
 import { EntityType } from "src/globalTypes/EntityType";
-import { SimpleObject } from "src/globalTypes/SimpleObject";
+import { Entity } from "src/globalTypes/Entity";
 import { StoreState } from "src/store";
 
 interface Props {
-  entity: SimpleObject;
+  entity: Entity;
   index: number;
   onClick: (entityType: EntityType, id: string, name: string) => void;
   entityType: EntityType;
@@ -66,7 +66,6 @@ export const Row = (props: Props) => {
               : "primary.light"
             : "initial",
           display: "table-row",
-          // border: props.selectedEntity ? 2 : "initial",
           ":hover": {
             bgcolor: isDarkTheme ? "primary.dark" : "primary.light",
           },

@@ -34,7 +34,8 @@ export const AddBookButton = (props: Props) => {
       id: "",
       name: "",
       authorId: "",
-    });    setOpen(false);
+    });
+    setOpen(false);
   };
   const addReadiedBook = () => {
     if (!booksList.some((bookLst) => bookLst.id === book!.id)) {
@@ -63,7 +64,7 @@ export const AddBookButton = (props: Props) => {
         PaperProps={{ className: dialogStyle.dialog }}
       >
         <DialogTitle className={dialogStyle.DialogTitle}>הוסף ספר</DialogTitle>
-        <DialogContent className={dialogStyle.paddingTop} >
+        <DialogContent className={dialogStyle.paddingTop}>
           <Autocomplete
             options={booksList.map((book: Book) => ({
               book: book,

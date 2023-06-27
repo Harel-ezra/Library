@@ -1,6 +1,6 @@
-import { Book } from "./Book";
-import { SimpleObject } from "./SimpleObject";
+import {  Book } from "./Book";
+import { Entity } from "./Entity";
 
-export interface Author extends SimpleObject {
-    writtenBooks: Book[];
+export interface  Author extends Entity {
+    writtenBooks:  Book[];
   }

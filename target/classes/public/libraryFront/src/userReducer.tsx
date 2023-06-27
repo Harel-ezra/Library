@@ -1,32 +1,23 @@
 interface setUserAction {
   type: "SET_USER";
-  payload:
-    | {
-        id: string;
-        name: string;
-        favoriteBookId: string;
-        favoriteBookName: string;
-      }
-    | undefined;
+  payload: {
+    id: string;
+    name: string;
+    favoriteBookId: string;
+    favoriteBookName: string;
+  };
 }
 interface setUserNameAction {
   type: "SET_USER_NAME";
-  payload: { name: string } | undefined;
+  payload: { name: string };
 }
 interface setFavoriteBookAction {
   type: "SET_FAVORITE_BOOK";
-  payload: { id: string; name: string } | undefined;
+  payload: { id: string; name: string };
 }
 
 const initialState = {
-  user: undefined as
-    | {
-        id: string;
-        name: string;
-        favoriteBookId: string;
-        favoriteBookName: string;
-      }
-    | undefined,
+  user: { id: "", name: "", favoriteBookId: "", favoriteBookName: "" },
 };
 
 const userReducer = (

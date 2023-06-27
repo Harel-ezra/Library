@@ -1,7 +1,7 @@
-import { Book } from "./Book";
-import { SimpleObject } from "./SimpleObject";
+import {  Book } from "./Book";
+import { Entity } from "./Entity";
 
-export interface User extends SimpleObject {
-    booksRead: Book[];
+export interface  User extends Entity {
+    booksRead:  Book[];
     favoriteBookId: string;
   }

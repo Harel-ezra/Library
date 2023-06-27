@@ -14,7 +14,7 @@ import { EntityType } from "src/globalTypes/EntityType";
 import Swal from "sweetalert2";
 interface Props {
   entityTypeText: string;
-  addAction: (name: string, entityType?: EntityType) => void;
+  addAction: (name: string, entityType: EntityType) => void;
   entityType: EntityType;
 }
 export const AddObjectDialog = (props: Props) => {

@@ -15,8 +15,6 @@ const LoginButton = (props: Props) => (
     variant="contained"
   >
     <Typography className={LoginButtonStyle.text} >
-      {/* מה */}
-      {" "}
       {props.text}
     </Typography>
     <LogoutIcon />

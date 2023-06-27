@@ -1,3 +1,6 @@
+import RHs.AuthorRH;
+import RHs.BookRH;
+import RHs.UserRH;
 import spark.Spark;
 
 import static spark.Spark.after;
@@ -7,7 +10,10 @@ public class Server {
     public static void main(String[] args) {
         Spark.staticFiles.location("/public");
         setupCORS();
-        RH.setRoutes();
+        AuthorRH.setAuthorRoutes();
+        UserRH.setUserRoutes();
+        BookRH.setBookRoutes();
+//        RH.setRoutes();
     }
 
     public static void setupCORS() {

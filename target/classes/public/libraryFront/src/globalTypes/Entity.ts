@@ -1,4 +1,4 @@
-export interface SimpleObject{
+export interface Entity{
     id: string;
     name: string;
   } 

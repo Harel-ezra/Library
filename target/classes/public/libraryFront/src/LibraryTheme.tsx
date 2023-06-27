@@ -3,16 +3,24 @@ import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import App from "./App.tsx";
 import { useState } from "react";
 
-export const ColorModeContext = React.createContext({
+export const ThemeModeContext = React.createContext({
   toggleColorMode: () => {},
 });
 
+const themeNames = {
+  light: 'light',
+  dark: 'dark',
+  rainbow: 'rainbow',
+} as const
+
+type ThemeName = typeof themeNames[keyof typeof themeNames]
+
 const LibraryTheme = () => {
-  const [mode, setMode] = useState<"light" | "dark">("light");
-  const colorMode = React.useMemo(
+  const [mode, setMode] = useState<ThemeName>('light');
+  const changeThemeMode = React.useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
       },
     }),
     []
@@ -29,6 +37,7 @@ const LibraryTheme = () => {
       }),
     []
   );
+
   const darkTheme = React.useMemo(
     () =>
       createTheme({
@@ -50,12 +59,13 @@ const LibraryTheme = () => {
   const theme = mode === "light" ? lightTheme : darkTheme;
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
+    <ThemeModeContext.Provider value={changeThemeMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <App />
       </ThemeProvider>
-    </ColorModeContext.Provider>
+    </ThemeModeContext.Provider>
   );
 };
+
 export default LibraryTheme;

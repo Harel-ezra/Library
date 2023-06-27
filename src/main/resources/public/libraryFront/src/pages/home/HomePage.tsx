@@ -9,12 +9,12 @@ import { LibraryLogo } from "components/logo/LibraryLogo";
 import LoginButton from "src/components/button/LoginButton";
 import { DarkModeButton } from "src/components/darkMode/DarkModeButton";
 import { getEntities } from "src/serverRequest/requests";
-import { User } from "src/globalTypes/User";
+import {  User } from "src/globalTypes/User";
 import Swal from "sweetalert2";
 
 const HomePage = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User>();
+  const [users, setUsers] = useState< User[]>([]);
+  const [selectedUser, setSelectedUser] = useState< User>();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -45,7 +45,7 @@ const HomePage = () => {
       <LibraryLogo />
       <Autocomplete
         className={homepageStyle.autocomplete}
-        options={users.map((user: User) => ({ user: user, label: user.name }))}
+        options={users.map((user:  User) => ({ user: user, label: user.name }))}
         noOptionsText={"משתמש לא קיים"}
         getOptionLabel={(option) => option.label}
         isOptionEqualToValue={(option,value) => option.user.id===value.user.id}

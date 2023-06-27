@@ -2,7 +2,7 @@ import { Box, TableBody, TableContainer, Typography } from "@mui/material";
 import detailsStyle from "./details.module.css";
 import { DetailsHeader } from "./DetailsHeader";
 import { EntityType } from "src/globalTypes/EntityType";
-import { SimpleObject } from "src/globalTypes/SimpleObject";
+import { Entity } from "src/globalTypes/Entity";
 import { TableHeader } from "components/items/TableHeader";
 import { DetailRow } from "./DetailRow";
 import {
@@ -11,17 +11,17 @@ import {
 import { handleFavoriteBook } from "src/pages/library/Library";
 import { useDispatch } from "react-redux";
 interface Props {
-  entityDetails: SimpleObject[];
-  selectedEntity?: SimpleObject;
+  entityDetails: Entity[];
+  selectedEntity?: Entity;
   entityType?: EntityType;
   addReadiedBook: (userId: string, bookId: string) => void;
-  addEntityDetail: (name: string, bar: EntityType) => void;
-  removeEntityDetail: (id: string, bar: EntityType) => void;
+  addEntityDetail: (name: string, entityType: EntityType) => void;
+  removeEntityDetail: (id: string, entityType: EntityType) => void;
 }
 export const DetailsTable = (props: Props) => {
   const dispatch = useDispatch();
-  const deleteObject = (id: string, bar: EntityType) => {
-    props.removeEntityDetail(id, bar);
+  const deleteObject = (id: string, entityType: EntityType) => {
+    props.removeEntityDetail(id, entityType);
   };
   const updateFavoriteBook = async (bookId: string) => {
     if (props.selectedEntity) await updateFavoriteBookAxios(props.selectedEntity.id, bookId);
@@ -33,7 +33,7 @@ export const DetailsTable = (props: Props) => {
       {props.selectedEntity && (
         <>
           <DetailsHeader
-            bar={props.entityType!}
+            entityType={props.entityType!}
             object={props.selectedEntity}
             addReadiedBook={props.addReadiedBook}
             addAction={props.addEntityDetail}
@@ -55,7 +55,7 @@ export const DetailsTable = (props: Props) => {
               </colgroup>
               <TableHeader />
               <TableBody>
-                {props.entityDetails.map((entity: SimpleObject, index: number) => (
+                {props.entityDetails.map((entity: Entity, index: number) => (
                   <DetailRow
                     key={entity.id}
                     index={index}
@@ -75,7 +75,7 @@ export const DetailsTable = (props: Props) => {
   );
 };
 
-const noDataMessage = {
+const noDataMessage: Record<EntityType, string> = {
   User: "אין ספרים להצגה",
   Book: "אין משתמשים להצגה",
   Author: "אין ספרים להצגה",

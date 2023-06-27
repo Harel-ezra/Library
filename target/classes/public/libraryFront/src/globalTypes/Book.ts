@@ -1,5 +1,5 @@
-import { SimpleObject } from "./SimpleObject";
+import { Entity } from "./Entity";
 
-export interface Book extends SimpleObject {
+export interface  Book extends Entity {
     authorId: string;
   }

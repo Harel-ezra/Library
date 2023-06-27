@@ -75,7 +75,7 @@ export const removeEntityBook = async (
   bookId: string,
   entityType: EntityType
 ) => {
-  const response = await axios.put(`${httpLocalHost}remove${entityType}Book`, {
+  const response = await axios.put(`${httpLocalHost}remove${entityType} Book`, {
     id: id,
     bookId: bookId,
   });

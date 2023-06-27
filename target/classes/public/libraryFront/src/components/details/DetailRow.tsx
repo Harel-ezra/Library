@@ -1,18 +1,18 @@
 import { IconButton, TableCell, TableRow } from "@mui/material";
 import { DeleteButton } from "../icons/Icons";
 import { EntityType } from "../../globalTypes/EntityType";
-import { SimpleObject } from "src/globalTypes/SimpleObject";
+import { Entity } from "src/globalTypes/Entity";
 import { StarBorder, Star } from "@mui/icons-material";
 import detailsStyle from "./details.module.css";
 import { useSelector } from "react-redux";
 import { StoreState } from "src/store";
 interface Props {
-  entityDetail: SimpleObject;
+  entityDetail: Entity;
   index: number;
   entityType: EntityType;
-  removeEntityDetail: (id: string, bar: EntityType) => void;
+  removeEntityDetail: (id: string, entityType: EntityType) => void;
   updateFavoriteBook: (id: string) => void;
-  selectedEntity: SimpleObject;
+  selectedEntity: Entity;
 }
 export const DetailRow = (props: Props) => {
   const userId = useSelector((store: StoreState) => store.user?.id);
