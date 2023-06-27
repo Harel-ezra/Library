@@ -1,211 +1,172 @@
+import { Dispatch, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
-import { TopBar } from "../../components/bar/topBar/TopBar";
 import libraryPageStyle from "./library.module.css";
-import { useState } from "react";
-import { SideBar } from "../../components/bar/sideBar/SideBar";
-import { Items } from "../../components/items/Items";
-import { Objects, Object, Bar } from "../../globalTypes/globalTypes";
-import { Details } from "../../components/details/Details";
+import { TopBar } from "components/bar/topBar/TopBar";
+import { SideBar } from "components/bar/sideBar/SideBar";
+import { ItemsTable } from "src/components/items/ItemsTable";
+import { DetailsTable } from "src/components/details/DetailsTable";
+import { EntityType } from "src/globalTypes/EntityType";
+import { Entity } from "src/globalTypes/Entity";
 import {
-  addAuthorAxios,
-  addReadiedBookAxios,
-  addUserAxios,
-  addWrittenBookAxios,
-  getAllAuthorsAxios,
-  getAllBookReadersAxios,
-  getAllBooksAxios,
-  getAllReadiedBooksAxios,
-  getAllUsersaAxios as getAllUsersAxios,
-  getAllWrittenBooksAxios,
-  removeAuthorAxios,
-  removeBookFromLibraryAxios,
-  removeReadiedBookAxios,
-  removeUserAxios,
-  removeWrittenBookAxios,
-  renameAuthorAxios,
-  renameBookAxios,
-  renameUserAxios,
-} from "../../serverRequest/request";
+  addEntity,
+  addReadBook,
+  addWrittenBook,
+  getEntities,
+  getEntityDetails,
+  getFavoriteBook,
+  removeEntity,
+  removeEntityBook,
+  renameEntity,
+} from "src/serverRequest/requests";
+import { StoreState } from "src/store";
 
 const Library = () => {
-  const [objectId, setObjectId] = useState("");
-  const [objectName, setObjectName] = useState("");
-  const [objects, setObjects] = useState<Objects>([]);
-  const [objectInfo, setObjectInfo] = useState<Objects>([]);
-  const [selectedBar, setSelectedBar] = useState<Bar>("none");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((store: StoreState) => store.user);
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+      return;
+    }
+    handleFavoriteBook(user.id, dispatch);
+  }, []);
 
-  const handleBar = (bar: Bar) => {
-    setObjectInfo([]);
-    setObjectId("");
-    setObjectName("");
-    setObjects([]);
+  const [selectedEntityType, setSelectedEntityType] = useState<EntityType>();
 
-    switch (bar) {
-      case "books": {
-        getAllBooksAxios().then((res) => setObjects(res));
-        setSelectedBar("books");
-        break;
-      }
-      case "users": {
-        getAllUsersAxios().then((res) => setObjects(res));
-        setSelectedBar("users");
-        break;
-      }
-      case "authors": {
-        getAllAuthorsAxios().then((res) => setObjects(res));
-        setSelectedBar("authors");
-        break;
-      }
-      default: {
-        break;
-      }
+  const [entities, setEntities] = useState<Entity[]>([]);
+
+  const [selectedEntityDetails, setSelectedEntityDetails] = useState<Entity[]>(
+    []
+  );
+  const [selectedEntity, setSelectedEntity] = useState<Entity>();
+
+  const handleSidebarSelect = (entityType: EntityType) => {
+    setEntities([]);
+    setSelectedEntity(undefined);
+    setSelectedEntityDetails([]);
+
+    if (entityType) getEntities(entityType).then((res) => setEntities(res));
+    setSelectedEntityType(entityType);
+  };
+
+  const handleAddEntity = async (name: string, entityType: EntityType) => {
+    if (entityType === "Book") {
+      await addWrittenBook(selectedEntity!.id, name);
+      getEntityDetails(selectedEntity!.id, "Author").then((res) =>
+        setSelectedEntityDetails(res)
+      );
+    } else {
+      await addEntity(name, entityType).then((res) => setEntities(res));
     }
   };
 
-  const addObject = async (name: string, bar: Bar) => {
-    switch (bar) {
-      case "books": {
-        await addWrittenBookAxios(objectId, name);
-        getAllWrittenBooksAxios(objectId).then((res) => setObjectInfo(res));
-        // getAllUsersAxios().then((res) => setObjects(res));
-        break;
-      }
-      case "users": {
-        await addUserAxios(name);
-        getAllUsersAxios().then((res) => setObjects(res));
-        break;
-      }
-      case "authors": {
-        await addAuthorAxios(name);
-        getAllAuthorsAxios().then((res) => setObjects(res));
-        break;
-      }
-      default: {
-        break;
-      }
+  const HandleRemoveEntity = async (id: string, entityType: EntityType) => {
+    if (id === selectedEntity?.id) {
+      setSelectedEntityDetails([]);
+      setSelectedEntity(undefined);
+    }
+    setEntities(await removeEntity(id, entityType));
+
+    if (selectedEntityType === "Author") {
+      handleFavoriteBook(user.id, dispatch);
     }
   };
 
-  const removeObject = async (id: string, bar: Bar) => {
-    switch (bar) {
-      case "books": {
-        await removeBookFromLibraryAxios(id);
-        setObjects([]);
-        getAllBooksAxios().then((res) => setObjects(res));
-        break;
-      }
-      case "users": {
-        await removeUserAxios(id);
-        setObjects([]);
-        getAllUsersAxios().then((res) => setObjects(res));
-        break;
-      }
-      case "authors": {
-        await removeAuthorAxios(id);
-        setObjects([]);
-        getAllAuthorsAxios().then((res) => setObjects(res));
-        break;
-      }
-      default: {
-        break;
-      }
+  const handleRenameEntity = async (
+    id: string,
+    entityType: EntityType,
+    newName: string
+  ) => {
+    if (id === user.id) {
+      dispatch({ type: "SET_USER_NAME", payload: { name: newName } });
+    }
+    // כאן עדיף שנקבל שם ומזהה של היישות שהשתנתה ואז למצוא אצלנו ולשנות
+    // לא תמיד עדיף שליפה
+    setEntities(await renameEntity(id, newName, entityType));
+
+    if (id === user.favoriteBookId) {
+      handleFavoriteBook(user.id, dispatch);
     }
   };
 
-  const renameObject = async (id: string, bar: Bar, newName: string) => {
-    switch (bar) {
-      case "books": {
-        await renameBookAxios(id, newName);
-        getAllBooksAxios().then((res) => setObjects(res));
-        break;
-      }
-      case "users": {
-        await renameUserAxios(id, newName);
-        getAllUsersAxios().then((res) => setObjects(res));
-        break;
-      }
-      case "authors": {
-        await renameAuthorAxios(id, newName);
-        getAllAuthorsAxios().then((res) => setObjects(res));
-        break;
-      }
-      default: {
-        break;
-      }
-    }
+  const handleSelectEntity = (entityType: EntityType, id: string) => {
+    setSelectedEntity({
+      id: id,
+      name: entities.find((obj) => obj.id === id)!.name,
+    });
+    getEntityDetails(id, entityType).then((res) =>
+      setSelectedEntityDetails(res)
+    );
   };
 
-  const handleObjectInfo = (bar: Bar, id: string) => {
-    const obj = objects.find((obj) => obj.id === id)?.name;
-    obj != undefined ? setObjectName(obj) : null;
-    setObjectId(id);
+  // אפשר גם addBookToUser
+  const handleAddReadBook = (userId: string, bookId: string) => {
+    addReadBook(userId, bookId).then((res) => setSelectedEntityDetails(res));
+  };
 
-    switch (bar) {
-      case "users": {
-        getAllReadiedBooksAxios(id).then((res) => setObjectInfo(res));
-        break;
-      }
-      case "books": {
-        getAllBookReadersAxios(id).then((res) => setObjectInfo(res));
-        break;
-      }
-      case "authors": {
-        getAllWrittenBooksAxios(id).then((res) => setObjectInfo(res));
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  };
-  const addReadiedBook = async (userId: string, bookId: string) => {
-    await addReadiedBookAxios(userId, bookId);
-    getAllReadiedBooksAxios(objectId).then((res) => setObjectInfo(res));
-  };
-  const removeObjectInfo = async (objectInfoId: string, bar: Bar) => {
-    switch (bar) {
-      case "users": {
-        await removeReadiedBookAxios(objectId, objectInfoId);
-        getAllReadiedBooksAxios(objectId).then((res) => setObjectInfo(res));
-        break;
-      }
-      case "authors": {
-        await removeWrittenBookAxios(objectId,objectInfoId);
-        getAllWrittenBooksAxios(objectId).then((res) => setObjectInfo(res));
-        break;
-      }
-      default: {
-        break;
-      }
+  const handleRemoveEntityDetail = async (
+    entityId: string,
+    entityType: EntityType
+  ) => {
+    setSelectedEntityDetails(
+      await removeEntityBook(selectedEntity!.id, entityId, entityType)
+    );
+    if (entityId === user.favoriteBookId) {
+      dispatch({
+        type: "SET_FAVORITE_BOOK",
+        payload: { id: "0", name: "לא נבחר ספר" },
+      });
     }
   };
 
   return (
-    <Box className={libraryPageStyle.libraryPageBox}>
-      <SideBar onClicked={handleBar}></SideBar>
+    <Box className={libraryPageStyle.libraryPage}>
+      <SideBar onClick={handleSidebarSelect}></SideBar>
       <Box className={libraryPageStyle.topBarAndContantBox}>
         <TopBar />
-        <Box className={libraryPageStyle.libraryContentBox}>
-          <Items
-            objects={objects}
-            handleObjectInfo={handleObjectInfo}
-            bar={selectedBar}
-            addObject={addObject}
-            removeObject={removeObject}
-            renameObject={renameObject}
-          ></Items>
-          <Details
-            objectId={objectId}
-            objectName={objectName}
-            addObject={addObject}
-            bar={selectedBar}
-            objectInfo={objectInfo}
-            addReadiedBook={addReadiedBook}
-            removeObject={removeObjectInfo}
-          ></Details>
+        <Box
+          className={libraryPageStyle.libraryContentBox}
+          bgcolor={"primary.main"}
+        >
+          <ItemsTable
+            entitys={entities}
+            selectedEntityDetails={handleSelectEntity}
+            entityType={selectedEntityType}
+            addEntity={handleAddEntity}
+            removeEntity={HandleRemoveEntity}
+            renameEntity={handleRenameEntity}
+            selectedEntity={selectedEntity}
+          ></ItemsTable>
+          <DetailsTable
+            selectedEntity={selectedEntity!}
+            addEntityDetail={handleAddEntity}
+            entityType={selectedEntityType}
+            entityDetails={selectedEntityDetails}
+            addReadiedBook={handleAddReadBook}
+            removeEntityDetail={handleRemoveEntityDetail}
+          ></DetailsTable>
         </Box>
-      </Box>{" "}
+      </Box>
     </Box>
   );
 };
 export default Library;
+
+export const handleFavoriteBook = (id: string, dispatch: Dispatch<any>) => {
+  getFavoriteBook(id).then((res) => {
+    if (res) {
+      dispatch({
+        type: "SET_FAVORITE_BOOK",
+        payload: { id: res.id, name: res.name },
+      });
+    } else {
+      dispatch({
+        type: "SET_FAVORITE_BOOK",
+        payload: { id: "0", name: "לא נבחר ספר" },
+      });
+    }
+  });
+};

@@ -1,11 +1,23 @@
-import userNameReducer from './userNameReducer';
-import { createStore } from 'redux';
-
+import userReducer from "./userReducer";
+import { createStore, applyMiddleware } from "redux";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 export interface StoreState {
-  id: string | null;
-  name: string;
+  user: {
+    id: string;
+    name: string;
+    favoriteBookId: string;
+    favoriteBookName: string;
+  };
 }
 
-const store = createStore(userNameReducer);
-export { store };
+const persistConfig = {
+  key: "main-root",
+  storage,
+};
+const persistedReducer = persistReducer(persistConfig, userReducer);
+
+const store = createStore(persistedReducer, applyMiddleware());
+const persistor=persistStore(store);
+export {persistor, store };
 export default store;

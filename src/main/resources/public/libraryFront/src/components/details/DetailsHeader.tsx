@@ -1,39 +1,48 @@
 import { Box, Typography } from "@mui/material";
-import { AddBookButton } from "../dialog/AddReadiedDialog";
 import detailsStyle from "./details.module.css";
-import { Bar } from "../../globalTypes/globalTypes";
-import { Object } from "../../globalTypes/globalTypes";
-import { AddObjectDialog } from "../dialog/AddObjectDialog";
+import { EntityType } from "src/globalTypes/EntityType";
+import { AddBookButton } from "components/dialog/AddReadiedDialog";
+import { AddObjectDialog } from "components/dialog/AddObjectDialog";
+import { StoreState } from "src/store";
+import { useSelector } from "react-redux";
+import { Entity } from "src/globalTypes/Entity";
 
 interface Props {
-  // header:string,
   addReadiedBook: (userId: string, bookId: string) => void;
-  objectId: string;
-  objectName: string;
-  bar: Bar;
-  addAction: (name: string, bar: Bar) => void;
+  object: Entity;
+
+  entityType: EntityType;
+  addAction: (name: string, entityType: EntityType) => void;
 }
 export const DetailsHeader = (props: Props) => {
+  const userId = useSelector((store: StoreState) => store.user.id);
+
   return (
     <Box className={detailsStyle.detailsHeader}>
-      <Typography className={detailsStyle.text}>
-        {props.bar === "users" && `הספרים שקרא ${props.objectName}`}
-        {props.bar === "books" && `הקוראים של הספר ${props.objectName}`}
-        {props.bar === "authors" && `הספרים שכתב ${props.objectName}`}
+      <Typography className={detailsStyle.text} sx={{ color: "primary.light" }}>
+        {props.entityType && `${hedaerText[props.entityType]} ${props.object.name}`}
       </Typography>
-      {props.bar === "users" && (
+      {props.object.id === userId && (
         <AddBookButton
-          userId={props.objectId}
+          userId={props.object.id}
           addReadiedBook={props.addReadiedBook}
         />
       )}
-      {props.bar === "authors" && (
+      {props.entityType === "Author" && (
         <AddObjectDialog
-          addType="ספר שכתב"
-          addAction={(name: string, bar: Bar)=>props.addAction(name,"books")}
-          bar={props.bar}
+          entityTypeText="ספר שכתב"
+          addAction={(name: string) =>
+            props.addAction(name, "Book")
+          }
+          entityType={props.entityType}
         ></AddObjectDialog>
       )}
     </Box>
   );
+};
+
+const hedaerText = {
+  User: "הספרים שקרא",
+  Book: "הקוראים של הספר",
+  Author: "הספרים שכתב",
 };

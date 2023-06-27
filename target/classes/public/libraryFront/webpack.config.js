@@ -1,10 +1,8 @@
-module.exports = {
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            }
-        ]
-    }
-}
+export const module = {
+    rules: [
+        {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader']
+        }
+    ],
+};

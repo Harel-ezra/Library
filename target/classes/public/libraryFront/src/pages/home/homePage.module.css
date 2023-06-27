@@ -1,15 +1,14 @@
-.mainBoxPage{
-    /* height: 100%; */
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    /* justify-content: center; */
-    /* justify-content: space-evenly; */
+/* homePage */
+.homePage {
+  padding: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
 }
-.autoCompletBox
-{
-    height: 5em;
-    width: 30em;
+
+/* autocomplete */
+.autocomplete {
+  height: 5em;
+  width: 30em;
 }

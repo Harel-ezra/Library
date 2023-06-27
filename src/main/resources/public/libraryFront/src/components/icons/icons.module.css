@@ -6,3 +6,9 @@
 .textCenter{
     text-align: center;
 }
+
+.iconSize
+{
+  width: 4rem;
+  height: 4rem;
+}

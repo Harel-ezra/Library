@@ -1,76 +1,92 @@
+import { ChangeEvent, useState } from "react";
+import { useSelector } from "react-redux";
 import {
-  Box,
   Button,
-  ClickAwayListener,
+  ButtonBase,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Input,
   TableCell,
   TableRow,
   TextField,
+  useTheme,
 } from "@mui/material";
-import { EditButton, DeleteButton } from "../icons/Icons";
-import { Book, User, Author } from "../../globalTypes/globalTypes";
-import itemsStyle from "./items.module.css";
-import { Bar } from "../../pages/library/Library";
-import { ChangeEvent, useState } from "react";
-import dialogStyle from "./../dialog/dialog.module.css";
+import { EditButton, DeleteButton } from "components/icons/Icons";
+import dialogStyle from "components/dialog/dialog.module.css";
+import { EntityType } from "src/globalTypes/EntityType";
+import { SimpleObject } from "src/globalTypes/SimpleObject";
+import { StoreState } from "src/store";
+
 interface Props {
-  item: Book | User | Author;
+  entity: SimpleObject;
   index: number;
-  onClick: (bar: Bar, id: string, name: string) => void;
-  selectedBar: Bar;
-  removeAction: (id: string, bar: Bar) => void;
-  renameAction: (id: string, bar: Bar, newName: string) => void;
+  onClick: (entityType: EntityType, id: string, name: string) => void;
+  entityType: EntityType;
+  removeEntity: (id: string, entityType: EntityType) => void;
+  renameEntity: (id: string, entityType: EntityType, newName: string) => void;
+  selectedEntity: boolean;
 }
 
 export const Row = (props: Props) => {
-  const [name, setName] = useState(props.item.name);
+  const [name, setName] = useState(props.entity.name);
   const [open, setOpen] = useState(false);
+  const userId = useSelector((store: StoreState) => store.user.id);
+  const isDarkTheme = useTheme().palette.mode === "dark";
 
   const clickedRow = () => {
-    props.onClick(props.selectedBar, props.item.id, props.item.name);
+    props.onClick(props.entityType, props.entity.id, props.entity.name);
   };
   const handleRemoveButton = () => {
-    props.removeAction(props.item.id, props.selectedBar);
+    props.removeEntity(props.entity.id, props.entityType);
   };
   const handleEditNameButton = () => {
     setOpen(true);
   };
   const handleCloseDialog = () => {
-    setName(props.item.name);
+    setName(props.entity.name);
     setOpen(false);
   };
-  const editNameDone=()=>
-  {
+  const editNameDone = () => {
     setOpen(false);
-    props.renameAction(props.item.id,props.selectedBar,name);
-  }
+    props.renameEntity(props.entity.id, props.entityType, name);
+  };
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
   return (
     <>
-      <TableRow className={itemsStyle.row} onClick={clickedRow}>
-        <TableCell>{props.index}</TableCell>
-        <TableCell>{name}</TableCell>
-        <TableCell>
-          <EditButton onClick={handleEditNameButton} />
-        </TableCell>
-        <TableCell>
-          <DeleteButton onClick={handleRemoveButton} />
-        </TableCell>
-      </TableRow>
-      <Dialog open={open}
-        onClose={handleCloseDialog}
-
+      <ButtonBase component={TableRow}
+        onClick={clickedRow}
+        sx={{
+          bgcolor: props.selectedEntity
+            ? isDarkTheme
+              ? "primary.dark"
+              : "primary.light"
+            : "initial",
+          display: "table-row",
+          // border: props.selectedEntity ? 2 : "initial",
+          ":hover": {
+            bgcolor: isDarkTheme ? "primary.dark" : "primary.light",
+          },
+        }}
       >
-        <DialogTitle >
-          ערוך 
-        </DialogTitle>
+        <TableCell>{props.index}</TableCell>
+        <TableCell sx={{ width: "100%" }}>{props.entity.name}</TableCell>
+
+        <TableCell
+          onClick={(e) => e.stopPropagation()}
+          className={dialogStyle.iconCell}
+        >
+          <EditButton onClick={handleEditNameButton} />
+          {props.entityType !== "Book" && userId !== props.entity.id && (
+            <DeleteButton onClick={handleRemoveButton} />
+          )}
+        </TableCell>
+      </ButtonBase>
+      <Dialog open={open} onClose={handleCloseDialog}>
+        <DialogTitle className={dialogStyle.DialogTitle}>שנה שם </DialogTitle>
         <DialogContent className={dialogStyle.dilogContent}>
           <TextField
             label="שם"
@@ -93,4 +109,3 @@ export const Row = (props: Props) => {
     </>
   );
 };
-

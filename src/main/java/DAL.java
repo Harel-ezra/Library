@@ -31,76 +31,85 @@ public class DAL {
     public static Bson projectionNameAndId = Projections.fields(Projections.include("_id", "name"));
 
 
-    public static String renameBook(String bookId, String newName) {
+    public static ArrayList<Book> renameBook(String bookId, String newName) {
         booksCollection.updateOne(
                 new Document("_id", bookId),
                 Updates.set("name", newName));
-        return "ok";
+        return getAllBooks();
     }
 
-    public static String addBookToLibrary(String bookId, String bookName, String authorId) {
-        booksCollection.insertOne(new Book(bookId, bookName, authorId));
-        return "ok";
-    }
-
-//    public static String removeBookFromLibrary(String bookId) {
-//        booksCollection.deleteOne(new Document("_id", bookId));
-//        authorsCollection.updateOne(
-//                new Document("books", new Document("bookId", bookId)),
-//                new Document("$pull", new Document("books", new Document("bookId", bookId))));
-//        userCollection.updateMany(
-//                new Document("books", new Document("bookId", bookId)),
-//                new Document("$pull", new Document("books", new Document("bookId", bookId))));
-//        return "ok";
-//    }
-
-    public static String addUser(String userId, String userName) {
+    public static ArrayList<User> addUser(String userId, String userName) {
         userCollection.insertOne(new User(userId, userName));
-        return "ok";
+        return getAllUsers();
     }
 
-    public static String removeUser(String userId) {
+    public static ArrayList<User> removeUser(String userId) {
         userCollection.deleteOne(new Document("_id", userId));
-        return "ok";
+        return getAllUsers();
     }
 
-    public static String renameUser(String userId, String newName) {
+    public static ArrayList<User> renameUser(String userId, String newName) {
         userCollection.updateOne(
                 new Document("_id", userId),
                 Updates.set("name", newName));
-        return "ok";
+        return getAllUsers();
     }
 
     public static String updateFavoriteBook(String userId, String bookId) {
-        userCollection.updateOne(
-                new Document("_id", userId),
-                new Document("favoriteBook", bookId)
-        );
+        Book book = getFavoriteBook(userId);
+
+        if (book == null || !book.getId().equals(bookId)) {
+            userCollection.updateOne(
+                    new Document("_id", userId),
+                    new Document("$set", new Document("favoriteBook", bookId))
+            );
+        } else {
+            userCollection.updateOne(
+                    new Document("_id", userId),
+                    new Document("$unset", new Document("favoriteBook", 1))
+            );
+        }
         return "ok";
     }
 
-    public static String addReadiedBook(String userId, String bookId) {
+    public static Book getFavoriteBook(String userId) {
+
+        String bookId = userCollection.find(new Document("_id", userId)).first().getFavoriteBook();
+        return (bookId == "") ? null : booksCollection.find(new Document("_id", bookId)).projection(projectionNameAndId).first();
+    }
+
+    public static User getUser(String userId) {
+        return userCollection.find(new Document("_id", userId)).first();
+    }
+
+    public static ArrayList<Book> addReadiedBook(String userId, String bookId) {
+        booksCollection.updateOne(
+                new Document("_id", bookId),
+                new Document("$addToSet", new Document("readers", userId)));
         userCollection.updateOne(
                 new Document("_id", userId),
                 new Document("$addToSet", new Document("booksRead", bookId)));
-        return "ok";
+        return getAllReadiedBooks(userId);
     }
 
-    public static String removeReadiedBook(String userId, String bookId) {
+    public static ArrayList<Book> removeReadiedBook(String userId, String bookId) {
+        booksCollection.updateOne(
+                new Document("_id", bookId),
+                new Document("$pull", new Document("readers", userId)));
         userCollection.updateOne(
                 new Document("_id", userId),
                 new Document("$pull", new Document("booksRead", bookId)));
 
-        return "ok";
+        return getAllReadiedBooks(userId);
     }
 
 
-    public static String addAuthor(String authorId, String authorName) {
+    public static ArrayList<Author> addAuthor(String authorId, String authorName) {
         authorsCollection.insertOne(new Author(authorId, authorName));
-        return "ok";
+        return getAllAuthors();
     }
 
-    public static String removeAuthor(String authorId) {
+    public static ArrayList<Author> removeAuthor(String authorId) {
         //need remove all his books and his readers.
 
         FindIterable<Book> booksIterator = booksCollection.find(new Document("authorId", authorId));
@@ -108,34 +117,37 @@ public class DAL {
             removeWrittenBook(authorId, book.getId());
         }
         authorsCollection.deleteOne(new Document("_id", authorId));
-        return "ok";
+        return getAllAuthors();
     }
 
-    public static String renameAuthor(String authorId, String newName) {
-        authorsCollection.updateOne(
-                new Document("_id", authorId),
-                new Document("name", newName)
-        );
-        return "ok";
+    public static ArrayList<Author> renameAuthor(String authorId, String newName) {
+        try {
+            authorsCollection.updateOne(
+                    new Document("_id", authorId),
+                    Updates.set("name", newName));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return getAllAuthors();
     }
 
-    public static String addWrittenBook(String authorId, String bookId, String bookName) {
+    public static ArrayList<Book> addWrittenBook(String authorId, String bookId, String bookName) {
         booksCollection.insertOne(new Book(bookId, bookName, authorId));
         authorsCollection.updateOne(
                 new Document("_id", authorId),
                 new Document("$push", new Document("books", bookId)));
-        return "ok";
+        return getAllWrittenBooks(authorId);
     }
 
-    public static String removeWrittenBook(String authorId, String bookId) {
-        booksCollection.deleteOne(new Document("_id", bookId));
-        authorsCollection.updateOne(
-                new Document("_id", authorId),
-                new Document("$pull", new Document("books", bookId)));
+    public static ArrayList<Book> removeWrittenBook(String authorId, String bookId) {
         userCollection.updateMany(
                 new Document("booksRead", bookId),
                 new Document("$pull", new Document("booksRead", bookId)));
-        return "ok";
+        authorsCollection.updateOne(
+                new Document("_id", authorId),
+                new Document("$pull", new Document("books", bookId)));
+        booksCollection.deleteOne(new Document("_id", bookId));
+        return getAllWrittenBooks(authorId);
     }
 
     public static ArrayList<Book> getAllWrittenBooks(String authorId) {
@@ -157,8 +169,7 @@ public class DAL {
     }
 
     public static ArrayList<User> getAllBookReaders(String bookId) {
-        ArrayList<User> userList = userCollection.find(new Document("booksRead", bookId)).projection(projectionNameAndId).into(new ArrayList<>());
-        return userList;
+        return userCollection.find(new Document("booksRead", bookId)).projection(projectionNameAndId).into(new ArrayList<>());
     }
 
     public static ArrayList<User> getAllUsers() {

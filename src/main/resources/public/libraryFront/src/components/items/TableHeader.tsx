@@ -4,9 +4,7 @@ export const TableHeader = () => (
   <TableHead>
     <TableRow>
       <TableCell>מזהה</TableCell>
-      <TableCell>שם</TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
+      <TableCell colSpan={3}>שם</TableCell>
     </TableRow>
   </TableHead>
 );

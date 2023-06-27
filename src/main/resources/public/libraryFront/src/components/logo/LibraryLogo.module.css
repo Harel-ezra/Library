@@ -1,15 +1,31 @@
-.libraryLogo{
-    font-size: 6em !important;
-    color: rgb(136, 170, 185);
-    -webkit-text-stroke: calc(0.08vh + 0.08vw) #438ba2;
-    text-shadow:
-            0vw 0.3vh 0.3vh #000000,
-            0.3vw 0.3vh 0.3vh #000000;
-    white-space: nowrap;
-    transition-duration: 0.3s;
-
+.libraryLogo {
+  font-size: calc(1rem + 3vh + 3vw) !important;
+  -webkit-text-stroke: calc(0.08vh + 0.08vw) #438ba2;
+  white-space: nowrap;
+  position: relative;
 }
-.libraryLogo:hover
-{
-    transform:scale( 1.05);
+
+.libraryLogo::before {
+  background: linear-gradient(to right, transparent, #ffffff, transparent);
+  content: "ספרייה";
+  position: absolute;
+  background-repeat: no-repeat;
+  animation: animate 3s infinite;
+  background-size: 30%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes animate {
+  0% {
+    background-position: -200%;
+  }
+  100% {
+    background-position: 200%;
+  }
+}
+
+.libraryLogo:hover {
+  transform: scale(1.05);
 }

@@ -16,31 +16,20 @@ public class BL {
         return DAL.getAllBooks();
     }
 
-
-    public static String addBookToLibrary(String bookName, String authorId) {
-        String bookId = UUID.randomUUID().toString();
-        return DAL.addBookToLibrary(bookId, bookName, authorId);
-    }
-
-//    public static String removeBookFromLibrary(String bookId) {
-//        return DAL.removeBookFromLibrary(bookId);
-//    }
-
-    public static String renameBook(String bookId, String newName) {
+    public static ArrayList<Book> renameBook(String bookId, String newName) {
         return DAL.renameBook(bookId, newName);
     }
 
-    public static String addUser(String userName) {
+    public static ArrayList<User> addUser(String userName) {
         String userId = UUID.randomUUID().toString();
         return DAL.addUser(userId, userName);
     }
 
-
-    public static String removeUser(String userId) {
+    public static ArrayList<User> removeUser(String userId) {
         return DAL.removeUser(userId);
     }
 
-    public static String renameUser(String userId, String newName) {
+    public static ArrayList<User> renameUser(String userId, String newName) {
         return DAL.renameUser(userId, newName);
     }
 
@@ -48,34 +37,38 @@ public class BL {
         return DAL.updateFavoriteBook(userId, bookId);
     }
 
-    public static String addReadiedBook(String userId, String bookId) {
+    public static Book getFavoriteBook(String userId) {
+        return DAL.getFavoriteBook(userId);
+    }
+
+    public static ArrayList<Book> addReadiedBook(String userId, String bookId) {
         return DAL.addReadiedBook(userId, bookId);
     }
-    public static String removeReadiedBook(String userId, String bookId) {
+    public static ArrayList<Book> removeReadiedBook(String userId, String bookId) {
         return DAL.removeReadiedBook(userId, bookId);
     }
 
-    public static String addAuthor(String authorName) {
+    public static ArrayList<Author> addAuthor(String authorName) {
         String authorId = UUID.randomUUID().toString();
         return DAL.addAuthor(authorId, authorName);
     }
 
-    public static String removeAuthor(String authorId) {
+    public static ArrayList<Author> removeAuthor(String authorId) {
         return DAL.removeAuthor(authorId);
 
     }
 
-    public static String renameAuthor(String authorId, String newName) {
+    public static ArrayList<Author> renameAuthor(String authorId, String newName) {
         return DAL.renameAuthor(authorId, newName);
 
     }
 
-    public static String addWrittenBook(String authorId, String bookName) {
+    public static ArrayList<Book> addWrittenBook(String authorId, String bookName) {
         String bookId=UUID.randomUUID().toString();
         return DAL.addWrittenBook(authorId,bookId, bookName);
     }
 
-    public static String removeWrittenBook(String authorId, String bookId) {
+    public static ArrayList<Book> removeWrittenBook(String authorId, String bookId) {
         return DAL.removeWrittenBook(authorId, bookId);
     }
 
@@ -91,6 +84,9 @@ public class BL {
 
     public static ArrayList<User> getAllBookReaders(String bookId) {
         return DAL.getAllBookReaders( bookId);
+    }
 
+    public static User getUser(String userId) {
+        return DAL.getUser( userId);
     }
 }

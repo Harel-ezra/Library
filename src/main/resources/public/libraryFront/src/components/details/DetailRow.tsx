@@ -1,24 +1,55 @@
 import { IconButton, TableCell, TableRow } from "@mui/material";
 import { DeleteButton } from "../icons/Icons";
-import itemsStyle from "./../items/items.module.css";
-import { Book, User, Author, Bar } from "../../globalTypes/globalTypes";
+import { EntityType } from "../../globalTypes/EntityType";
+import { Entity } from "src/globalTypes/Entity";
+import { StarBorder, Star } from "@mui/icons-material";
+import detailsStyle from "./details.module.css";
+import { useSelector } from "react-redux";
+import { StoreState } from "src/store";
 interface Props {
-  item: Book | User | Author;
+  entityDetail: Entity;
   index: number;
-  //   onClick: (bar: Bar, id: string, name: string) => void;
-  selectedBar: Bar;
-  removeObject: (id: string, bar: Bar) => void;
+  entityType: EntityType;
+  removeEntityDetail: (id: string, entityType: EntityType) => void;
+  updateFavoriteBook: (id: string) => void;
+  selectedEntity: Entity;
 }
 export const DetailRow = (props: Props) => {
+  const userId = useSelector((store: StoreState) => store.user?.id);
+  const favoriteBook =
+    useSelector((store: StoreState) => store.user?.favoriteBookId) ===
+    props.entityDetail.id;
   const DeleteObject = () => {
-    props.removeObject(props.item.id, props.selectedBar);
+    if (favoriteBook) props.updateFavoriteBook(props.entityDetail.id);
+    props.removeEntityDetail(props.entityDetail.id, props.entityType);
   };
-
+  const handleFavoriteBook = () => {
+    props.updateFavoriteBook(props.entityDetail.id);
+  };
   return (
-    <TableRow className={itemsStyle.row}>
+    <TableRow className={detailsStyle.row}>
       <TableCell>{props.index}</TableCell>
-      <TableCell>{props.item.name}</TableCell>
-      {props.selectedBar != "books" && (
+      <TableCell>{props.entityDetail.name}</TableCell>
+      {userId === props.selectedEntity.id && (
+        <TableCell>
+          <IconButton onClick={handleFavoriteBook}>
+            {favoriteBook ? (
+              <Star sx={{ color: "primary.light" }} />
+            ) : (
+              <StarBorder sx={{ color: "primary.light" }} />
+            )}
+          </IconButton>
+        </TableCell>
+      )}
+      {props.selectedEntity.id !== userId &&
+        props.entityDetail.id !== props.selectedEntity.id &&
+        props.entityType === "User" && (
+          <TableCell>
+            <Star sx={{ color: "primary.dark" }} />
+          </TableCell>
+        )}
+      {(props.entityType === "Author" ||
+        userId === props.selectedEntity.id) && (
         <TableCell>
           <IconButton>
             <DeleteButton onClick={DeleteObject} />

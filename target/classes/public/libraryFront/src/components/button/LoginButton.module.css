@@ -1,0 +1,10 @@
+.LoginButton
+{
+    margin-top:1em ;
+    width: calc(5rem + 10vw);
+    height: calc(1rem + 5vh);
+}
+.text{
+    font-size :2rem !important;
+    margin-left: 1rem !important;
+}

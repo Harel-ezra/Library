@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Autocomplete,
   Button,
@@ -8,43 +9,43 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState, ChangeEvent } from "react";
-import Swal from "sweetalert2";
-import AddCardIcon from "@mui/icons-material/AddCard";
 import dialogStyle from "./dialog.module.css";
-import { Book, Object } from "../../globalTypes/globalTypes";
-import { getAllBooksAxios } from "../../serverRequest/request";
+import AddCardIcon from "@mui/icons-material/AddCard";
+import Swal from "sweetalert2";
+import { Book } from "src/globalTypes/Book";
+import { getEntities } from "src/serverRequest/requests";
 interface Props {
   userId: string;
   addReadiedBook: (userId: string, bookId: string) => void;
 }
 
 export const AddBookButton = (props: Props) => {
-  const [bookName, setBookName] = useState<string>("");
-  const [bookId, setBookId] = useState<string>("");
-
+  const [book, setBook] = useState<Book>();
   const [open, setOpen] = useState(false);
-  const [books, setBooks] = useState<Book[]>([]);
+  const [booksList, setBooksList] = useState<Book[]>([]);
 
   const handleOpenDialog = () => {
     setOpen(true);
-    getAllBooksAxios().then((res) => setBooks(res));
+    getEntities("Book").then((res) => setBooksList(res));
   };
 
   const handleCloseDialog = () => {
-    setBookName("");
-    setOpen(false);
+    setBook({
+      id: "",
+      name: "",
+      authorId: "",
+    });    setOpen(false);
   };
   const addReadiedBook = () => {
-    if (bookName == "") {
+    if (!booksList.some((bookLst) => bookLst.id === book!.id)) {
       Swal.fire({
         title: "שגיאה!",
-        text: "לא ניתן להוסיף ספר ריק",
+        text: "  לא ניתן להוסיף ספר שלא קיים",
         icon: "error",
         confirmButtonText: "חזרה",
       });
     } else {
-      props.addReadiedBook(props.userId, bookId);
+      props.addReadiedBook(props.userId, book!.id);
     }
     handleCloseDialog();
   };
@@ -52,9 +53,7 @@ export const AddBookButton = (props: Props) => {
   return (
     <>
       <Button className={dialogStyle.AddBookDialog} onClick={handleOpenDialog}>
-        <Typography className={dialogStyle.AddBookDialogText}>
-          הוסף ספר
-        </Typography>
+        <Typography className={dialogStyle.buttonText}>הוסף ספר</Typography>
         <AddCardIcon />
       </Button>
 
@@ -64,23 +63,34 @@ export const AddBookButton = (props: Props) => {
         PaperProps={{ className: dialogStyle.dialog }}
       >
         <DialogTitle className={dialogStyle.DialogTitle}>הוסף ספר</DialogTitle>
-        <DialogContent>
+        <DialogContent className={dialogStyle.paddingTop} >
           <Autocomplete
-            options={books.map((book: Book) => book.name)}
-            renderInput={(params) => <TextField {...params} label="בחר ספר" />}
-            noOptionsText={'אין ספרים לבחירה'}
-            inputValue={bookName}
-            onInputChange={(event, newInputValue) => {
-              setBookName(newInputValue);
-              setBookId(
-                books.find((book) => book.name === newInputValue)?.id ?? "0"
-              );
+            options={booksList.map((book: Book) => ({
+              book: book,
+              label: book.name,
+            }))}
+            getOptionLabel={(option) => option.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="בחר ספר"
+                inputProps={{
+                  ...params.inputProps,
+                }}
+                onKeyPress={(e) => {
+                  if (e?.key === "Enter") {
+                    e.preventDefault();
+                    addReadiedBook();
+                  }
+                }}
+              />
+            )}
+            noOptionsText={"אין ספרים לבחירה"}
+            onInputChange={() => {
+              setBook(undefined);
             }}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                addReadiedBook();
-                event.preventDefault();
-              }
+            onChange={(_e, value) => {
+              if (value != null) setBook(value.book);
             }}
           ></Autocomplete>
         </DialogContent>

@@ -5,23 +5,23 @@ public class User {
     private String id;
     private String name;
     private List<String> booksRead;
-    private String favoriteBookId;
+    private String favoriteBook;
 
     public User() {
     }
 
-    public User(String id, String name, List<String> booksRead, String favoriteBookId) {
+    public User(String id, String name, List<String> booksRead, String favoriteBook) {
         this.id = id;
         this.name = name;
         this.booksRead = booksRead;
-        this.favoriteBookId = favoriteBookId;
+        this.favoriteBook = favoriteBook;
     }
 
     public User(String id, String name) {
         this.id = id;
         this.name = name;
         this.booksRead = new ArrayList<>();
-        this.favoriteBookId = null;
+        this.favoriteBook = null;
     }
 
     public String getId() {
@@ -36,8 +36,8 @@ public class User {
         return booksRead;
     }
 
-    public String getFavoriteBookId() {
-        return favoriteBookId;
+    public String getFavoriteBook() {
+        return favoriteBook;
     }
 
     public void setId(String id) {
@@ -52,16 +52,7 @@ public class User {
         this.booksRead = booksRead;
     }
 
-    public void setFavoriteBookId(String favoriteBookId) {
-        this.favoriteBookId = favoriteBookId;
+    public void setFavoriteBook(String favoriteBook) {
+        this.favoriteBook = favoriteBook;
     }
-
-//    @Override
-//    public String toString()
-//    {
-//        return "id:"+this.id.toString()+
-//                ", name:"+this.name+
-//                ", booksRead:"+ this.booksRead.toString()+
-//                ", favoriteBook:"+ this.favoriteBookId.toString();
-//    }
 }

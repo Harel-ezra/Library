@@ -1,3 +1,4 @@
+import { ChangeEvent, useState } from "react";
 import {
   Button,
   Dialog,
@@ -9,13 +10,12 @@ import {
 } from "@mui/material";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import dialogStyle from "./dialog.module.css";
-import { ChangeEvent, useState } from "react";
+import { EntityType } from "src/globalTypes/EntityType";
 import Swal from "sweetalert2";
-import { Bar } from "../../globalTypes/globalTypes";
 interface Props {
-  addType: string;
-  addAction: (name: string, bar: Bar) => void;
-  bar: Bar;
+  entityTypeText: string;
+  addAction: (name: string, entityType?: EntityType) => void;
+  entityType: EntityType;
 }
 export const AddObjectDialog = (props: Props) => {
   const [open, setOpen] = useState(false);
@@ -42,15 +42,17 @@ export const AddObjectDialog = (props: Props) => {
         confirmButtonText: "חזרה",
       });
     } else {
-      props.addAction(name, props.bar);
+      props.addAction(name, props.entityType);
     }
-    handleCloseDialog()
+    handleCloseDialog();
   };
 
   return (
     <>
       <Button className={dialogStyle.dialogButton} onClick={handleOpenDialog}>
-        <Typography>הוסף {props.addType}</Typography>
+        <Typography className={dialogStyle.buttonText}>
+          הוסף {props.entityTypeText}
+        </Typography>
         <AddCardIcon />
       </Button>
       <Dialog
@@ -59,7 +61,7 @@ export const AddObjectDialog = (props: Props) => {
         PaperProps={{ className: dialogStyle.dialog }}
       >
         <DialogTitle className={dialogStyle.DialogTitle}>
-          הוספת {props.addType}
+          הוספת {props.entityTypeText}
         </DialogTitle>
         <DialogContent className={dialogStyle.dilogContent}>
           <TextField
